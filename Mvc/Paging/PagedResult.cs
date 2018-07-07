@@ -17,6 +17,7 @@ namespace Microsoft.AspNetCore.Mvc.Paging
         public PagingInfo Pagination { get; set; }
     }
 
+
     /// <summary>
     /// Non-generic class of paged results.
     /// </summary>
