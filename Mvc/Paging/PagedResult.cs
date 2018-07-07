@@ -5,6 +5,8 @@ using System.Text;
 
 namespace Microsoft.AspNetCore.Mvc.Paging
 {
+    // TODO: recode to PagingContext
+
     /// <summary>
     /// Generic class of paged results.
     /// </summary>
