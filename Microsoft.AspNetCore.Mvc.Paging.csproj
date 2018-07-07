@@ -3,12 +3,13 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <RootNamespace>Microsoft.AspNetCore</RootNamespace>
-    <Version>2.1.3</Version>
+    <Version>2.2.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>AspNetCore.Mvc.Paging</PackageId>
-    <AssemblyVersion>2.1.3.0</AssemblyVersion>
-    <FileVersion>2.1.3.0</FileVersion>
-    <Description>Provides ability to return paging results from MVC APIs.</Description>
+    <AssemblyVersion>2.2.1.0</AssemblyVersion>
+    <FileVersion>2.2.1.0</FileVersion>
+    <Description>Provides ability to return paging results from MVC APIs either by attribute or by result.</Description>
+    <PackageProjectUrl>https://github.com/cloudfy/aspnetcore-paging</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>

@@ -15,7 +15,7 @@ namespace Microsoft.AspNetCore.Mvc.Paging
         /// <summary>
         /// Returns a new instance of the paging info object.
         /// </summary>
-        public PagingInfo()
+        internal PagingInfo()
         {
             this.Page = 1;
             this.PageSize = 50;
@@ -39,13 +39,14 @@ namespace Microsoft.AspNetCore.Mvc.Paging
         /// <summary>Gets a link to the previous page.</summary>
         public string Previous { get; internal set; }
         /// <summary>Gets a link to the next page.</summary>
-        public string Next { get; internal set; } 
+        public string Next { get; internal set; }
         #endregion
 
+        #region === internal methods ===
         /// <summary>
-        /// 
+        /// Returns a paginginfo class from an HttpRequest.
         /// </summary>
-        /// <param name="httpRequest"></param>
+        /// <param name="httpRequest">Request to retrieve paginig info from.</param>
         /// <returns></returns>
         internal static PagingInfo FromRequest(HttpRequest httpRequest)
         {
@@ -59,6 +60,7 @@ namespace Microsoft.AspNetCore.Mvc.Paging
                 throw new ArgumentOutOfRangeException("PageSize must be 1000 or below");
 
             return retValue;
-        }
+        } 
+        #endregion
     }
 }

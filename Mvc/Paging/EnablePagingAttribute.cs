@@ -36,6 +36,7 @@ namespace Microsoft.AspNetCore.Mvc.Paging
         }
         #endregion
 
+        #region === public methods ===
         /// <summary>
         /// Invoked as the method executes, and convert the output IQuerable to a paged result set.
         /// </summary>
@@ -45,7 +46,7 @@ namespace Microsoft.AspNetCore.Mvc.Paging
             var httpContext = context.HttpContext;
             var httpRequest = httpContext.Request;
             var httpResponse = httpContext.Response;
-            
+
             if (httpResponse.IsSuccessStatusCode())
             {
                 var pi = PagingInfo.FromRequest(httpRequest);
@@ -56,21 +57,12 @@ namespace Microsoft.AspNetCore.Mvc.Paging
                     throw new ArgumentException("Must return IQueryable from controller.");
 
                 or.Value = queryableValue.ToPagedResult(pi, httpRequest);
-                //or.Value = new PagedResult PagingCollection {
-                //    Collection = queryableValue.Paginate(pi.Page, pi.PageSize)
-                //    , Pagination = new PagingInfo {
-                //        Page = pi.Page
-                //        , PageSize = pi.PageSize
-                //        , MaxPageSizeAllowed = _maxPageSize == null ? 1000 : _maxPageSize.Value
-                //        , Result = queryableValue.Counter()
-                //    }
-                //};
             }
             else
             {
                 base.OnActionExecuted(context);
             }
-        }        
+        } 
+        #endregion
     }
-
 }

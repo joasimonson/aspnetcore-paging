@@ -9,40 +9,48 @@ using System.Threading.Tasks;
 namespace Microsoft.AspNetCore.Mvc
 {
     /// <summary>
-    /// /
+    /// Represents a paging result.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Collection type.</typeparam>
     public class PagingResult<T> : PagingResult
     {
+        #region === constructor ===
         /// <summary>
-        /// 
+        /// Returns a new instance.
         /// </summary>
-        /// <param name="source"></param>
-        public PagingResult(IQueryable<T> source) : base(source)
+        /// <param name="source">Collection source.</param>
+        internal PagingResult(IQueryable<T> source) : base(source)
         {
-        }
+        } 
+        #endregion
     }
 
     /// <summary>
-    /// 
+    /// Represents a paging result.
     /// </summary>
     public class PagingResult : IActionResult
     {
+        #region === member variables ===
+        /// <summary>Source.</summary>
         private IQueryable _source;
+        #endregion
 
+        #region === constructor ===
         /// <summary>
-        /// 
+        /// Returns a new instance.
         /// </summary>
-        /// <param name="source"></param>
-        public PagingResult(IQueryable source)
+        /// <param name="source">IQueryable source.</param>
+        internal PagingResult(IQueryable source)
         {
             _source = source;
         }
+        #endregion
 
+        #region === public methods ===
         /// <summary>
-        /// 
+        /// Executes the request.
         /// </summary>
-        /// <param name="context"></param>
+        /// <param name="context">Context of the action request.</param>
         /// <returns></returns>
         public Task ExecuteResultAsync(ActionContext context)
         {
@@ -63,8 +71,8 @@ namespace Microsoft.AspNetCore.Mvc
                 return or.ExecuteResultAsync(context);
                 //return Task.FromResult(or);
             }
-            throw new ArgumentException();
-        }
+            throw new ArgumentException("Response is not a success.");
+        } 
+        #endregion
     }
-
 }

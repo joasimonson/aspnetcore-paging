@@ -12,36 +12,37 @@ namespace Microsoft.AspNetCore.Mvc
     /// Provides extensions to IQueryable.
     /// </summary>
     public static class QueryableExtensions
-    {        
+    {
+        #region === public methods ===
         /// <summary>
-        /// 
+        /// Returns a paged result from a queryable collection.
         /// </summary>
-        /// <param name="source"></param>
-        /// <param name="pi"></param>
-        /// <param name="request"></param>
+        /// <param name="source">Collection source.</param>
+        /// <param name="pageInfo">Page information.</param>
+        /// <param name="request">Http request.</param>
         /// <returns></returns>
-        public static PagedResult ToPagedResult(this IQueryable source, PagingInfo pi, Http.HttpRequest request = null)
+        public static PagedResult ToPagedResult(this IQueryable source, PagingInfo pageInfo, Http.HttpRequest request = null)
         {
-            var list = GetGenericSkip((dynamic)source, (pi.Page - 1) * pi.PageSize, pi.PageSize);
+            var list = GetGenericSkip((dynamic)source, (pageInfo.Page - 1) * pageInfo.PageSize, pageInfo.PageSize);
 
             int totalResults = GetGenericCount((dynamic)source);
-            int totalPages = (int)Math.Ceiling( (decimal)totalResults / (decimal)pi.PageSize );
+            int totalPages = (int)Math.Ceiling((decimal)totalResults / (decimal)pageInfo.PageSize);
 
             string nextLink = ""; string previousLink = "";
 
             if (request != null)
             {
-                if (pi.Page < totalPages)
+                if (pageInfo.Page < totalPages)
                 {
                     nextLink = request.SchemeAndHost();
-                    nextLink += "?page=" + (pi.Page + 1).ToString();
+                    nextLink += "?page=" + (pageInfo.Page + 1).ToString();
                     if (request.Query.ContainsKey("pagesize"))
                         nextLink += "&pagesize=" + request.Query["pagesize"];
                 }
-                if (pi.Page > 1)
+                if (pageInfo.Page > 1)
                 {
                     previousLink = request.SchemeAndHost();
-                    previousLink += "?page=" + (pi.Page - 1).ToString();
+                    previousLink += "?page=" + (pageInfo.Page - 1).ToString();
                     if (request.Query.ContainsKey("pagesize"))
                         previousLink += "&pagesize=" + request.Query["pagesize"];
                 }
@@ -50,15 +51,37 @@ namespace Microsoft.AspNetCore.Mvc
             return new PagedResult()
             {
                 Collection = list,
-                Pagination = new PagingInfo {
+                Pagination = new PagingInfo
+                {
                     TotalResults = totalResults // total number of records returned, i.e. 4300
-                    , TotalPages = totalPages // total number of pages (ceiling) = totalResults / MaxPageSize
-                    , PageSize = pi.PageSize // current page size, would be 3 x 1000 then 1 x 300
-                    , Page = pi.Page // current page
+                    ,
+                    TotalPages = totalPages // total number of pages (ceiling) = totalResults / MaxPageSize
+                    ,
+                    PageSize = pageInfo.PageSize // current page size, would be 3 x 1000 then 1 x 300
+                    ,
+                    Page = pageInfo.Page // current page
                     //, MaxPageSizeAllowed = pi.MaxPageSizeAllowed
-                    , Next = nextLink
-                    , Previous = previousLink
+                    ,
+                    Next = nextLink
+                    ,
+                    Previous = previousLink
                 }
+            };
+        }
+
+        /// <summary>
+        /// Returns a paged result from a queryable collection.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source">Collection source.</param>
+        /// <param name="pageInfo">Page information.</param>
+        /// <returns></returns>
+        public static PagedResult<T> ToPagedResult<T>(this IQueryable<T> source, PagingInfo pageInfo) where T : class
+        {
+            return new PagedResult<T>()
+            {
+                Collection = source.Paginate<T>(pageInfo).ToArray(),
+                Pagination = pageInfo
             };
         }
 
@@ -66,7 +89,23 @@ namespace Microsoft.AspNetCore.Mvc
         /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="source"></param>
+        /// <param name="source">Collection source.</param>
+        /// <param name="pageInfo">Page information.</param>
+        /// <returns></returns>
+        public static IQueryable<T> Paginate<T>(this IQueryable<T> source, PagingInfo oageInfo) where T : class
+        {
+            return source
+                .Skip((oageInfo.Page - 1) * oageInfo.PageSize)
+                .Take(oageInfo.PageSize);
+        } 
+        #endregion
+
+        #region === private methods ===
+        /// <summary>
+        /// Returns a count from a generic iqueryable collection.
+        /// </summary>
+        /// <typeparam name="T">Type of collection.</typeparam>
+        /// <param name="source">Collection source.</param>
         /// <returns></returns>
         private static int GetGenericCount<T>(IQueryable<T> source)
         {
@@ -74,47 +113,18 @@ namespace Microsoft.AspNetCore.Mvc
         }
 
         /// <summary>
-        /// 
+        /// Returns a skip from a generic iqueryable collection.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="source"></param>
-        /// <param name="skip"></param>
-        /// <param name="take"></param>
+        /// <typeparam name="T">Type of collection.</typeparam>
+        /// <param name="source">Collection source.</param>
+        /// <param name="skip">Skip this amount.</param>
+        /// <param name="take">Take this amount.</param>
         /// <returns></returns>
         private static T[] GetGenericSkip<T>
                 (IQueryable<T> source, int skip, int take)
         {
             return source.Skip(skip).Take(take).ToArray();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="source"></param>
-        /// <param name="pi"></param>
-        /// <returns></returns>
-        public static PagedResult<T> ToPagedResult<T>(this IQueryable<T> source, PagingInfo pi) where T : class
-        {
-            return new PagedResult<T>() {
-                Collection = source.Paginate<T>(pi).ToArray(),
-                Pagination = pi
-            };
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="source"></param>
-        /// <param name="pagination"></param>
-        /// <returns></returns>
-        public static IQueryable<T> Paginate<T>(this IQueryable<T> source, PagingInfo pagination) where T : class
-        {
-            return source
-                .Skip((pagination.Page - 1) * pagination.PageSize)
-                .Take(pagination.PageSize);
-        }
+        } 
+        #endregion        
     }
-
 }
