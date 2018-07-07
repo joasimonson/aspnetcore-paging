@@ -1,0 +1,1 @@
+﻿**Query support** for AspNet CORE MVC. Providing support to specify queary parameters for API MVC. Projekt does not support Odata.
