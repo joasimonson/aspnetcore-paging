@@ -14,6 +14,11 @@ namespace Microsoft.AspNetCore.Mvc
     public static class QueryableExtensions
     {
         #region === public methods ===
+        public static PagedResult ToPagedResult(this IQueryable source, PagingInfo pageInfo, Http.HttpRequest request = null)
+        {
+            return ToPagedResult<object>(source, pageInfo, request) as PagedResult;
+        }
+
         /// <summary>
         /// Returns a paged result from a queryable collection.
         /// </summary>
@@ -21,7 +26,7 @@ namespace Microsoft.AspNetCore.Mvc
         /// <param name="pageInfo">Page information.</param>
         /// <param name="request">Http request.</param>
         /// <returns></returns>
-        public static PagedResult ToPagedResult(this IQueryable source, PagingInfo pageInfo, Http.HttpRequest request = null)
+        public static PagedResult<T> ToPagedResult<T>(this IQueryable source, PagingInfo pageInfo, Http.HttpRequest request = null) where T : class
         {
             var list = GetGenericSkip((dynamic)source, (pageInfo.Page - 1) * pageInfo.PageSize, pageInfo.PageSize);
 
@@ -48,7 +53,7 @@ namespace Microsoft.AspNetCore.Mvc
                 }
             }
 
-            return new PagedResult()
+            return new PagedResult<T>()
             {
                 Collection = list,
                 Pagination = new PagingInfo

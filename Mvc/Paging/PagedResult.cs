@@ -24,13 +24,7 @@ namespace Microsoft.AspNetCore.Mvc.Paging
     /// <summary>
     /// Non-generic class of paged results.
     /// </summary>
-    public class PagedResult
+    public class PagedResult : PagedResult<object>
     {
-        #region === properties ===
-        /// <summary>Gets or sets the collection.</summary>
-        public object Collection { get; set; }
-        /// <summary>Gets or sets the pagination information.</summary>
-        public PagingInfo Pagination { get; set; } 
-        #endregion
     }
 }

@@ -48,7 +48,7 @@ namespace Microsoft.AspNetCore.Mvc.Paging
         /// </summary>
         /// <param name="httpRequest">Request to retrieve paginig info from.</param>
         /// <returns></returns>
-        internal static PagingInfo FromRequest(HttpRequest httpRequest)
+        public static PagingInfo FromRequest(HttpRequest httpRequest)
         {
             PagingInfo retValue = new PagingInfo();
             if (httpRequest.Query.ContainsKey("page"))
