@@ -1,0 +1,37 @@
+name: NuGet Generation
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    name: Update NuGet package
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+        
+      - name: Setup .NET Core @ Latest
+        uses: actions/setup-dotnet@v1
+        with:
+          source-url: https://nuget.pkg.github.com/joasimonson/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          
+      - name: Install dependencies
+        run: dotnet restore
+        
+      - name: Proccess build
+        run: dotnet build -c Release
+        
+      - name: Generate NuGet package
+        run: dotnet pack -c Release --no-restore
+
+      - name: Push generated package to GitHub registry
+        run: dotnet nuget push "bin/Release/*.nupkg" --source "github"
