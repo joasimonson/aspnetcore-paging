@@ -22,6 +22,8 @@ jobs:
         with:
           dotnet-version: 3.1.301
           source-url: https://api.nuget.org/v3/index.json
+        env:
+          NUGET_AUTH_TOKEN: ''
 
       - name: Install dependencies
         run: dotnet restore
@@ -35,7 +37,7 @@ jobs:
           dotnet-version: 3.1.301
           source-url: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
         env:
-          NUGET_AUTH_TOKEN: ${{ github.token }}
+          NUGET_AUTH_TOKEN: '%NUGET_AUTH_TOKEN%'
         
       - name: Generate NuGet package
         run: dotnet pack -c Release --no-restore
