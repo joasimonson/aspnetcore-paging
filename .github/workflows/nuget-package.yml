@@ -27,6 +27,9 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
         
+      - name: Proccess build
+        run: dotnet build
+        
       - name: Generate NuGet package
         run: dotnet pack -c Release --no-restore
 
