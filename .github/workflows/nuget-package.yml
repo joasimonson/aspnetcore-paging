@@ -23,7 +23,7 @@ jobs:
           source-url: https://nuget.pkg.github.com/${{github.repository_owner}}/index.json
         env:
           NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      - run: dotnet build Microsoft.AspNetCore.Mvc.Paging.csproj
+      - run: dotnet build Microsoft.AspNetCore.Mvc.Paging.csproj --configuration Release
       - name: Create the package
         run: dotnet pack --configuration Release Microsoft.AspNetCore.Mvc.Paging.csproj
       - name: Publish the package to GPR
