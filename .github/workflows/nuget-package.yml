@@ -21,24 +21,25 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.100
-          
+          source-url: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
+        env:
+            NUGET_AUTH_TOKEN: '%NUGET_AUTH_TOKEN%'
+        
       - name: Install dependencies
         run: dotnet restore
         
       - name: Proccess build
-        run: dotnet build -c Release
+        run: dotnet build -c Release --no-restore
         
       - name: Generate NuGet package
         run: dotnet pack -c Release --no-restore
 
       - name: Add package source
-        run: dotnet nuget add source https://nuget.pkg.github.com/joasimonson/index.json -n github -u joasimonson -p GH_TOKEN ${{secrets.GITHUB_TOKEN}}
+#        run: dotnet nuget add source https://nuget.pkg.github.com/joasimonson/index.json -n github -u joasimonson -p GH_TOKEN ${{secrets.GITHUB_TOKEN}}
+        run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{secrets.PUBLISH_TO_NUGET_ORG}} --skip-duplicate
         
       - name: Push generated package to GitHub registry
-        run: dotnet nuget push "bin/Release/*.nupkg" --source "github"
-#        run: |
-#            for f in bin/Release/*.nupkg
-#            do
-#              curl -vX PUT -u "joasimonson:${{secrets.GITHUB_TOKEN}}" -F package=@$f https://nuget.pkg.github.com/joasimonson/
-#            done
-#        shell: bash
+#        run: dotnet nuget push "bin/Release/*.nupkg" --source "github"
+        run: dotnet nuget push *.nupkg --no-symbols --skip-duplicate
+        env:
+          NUGET_AUTH_TOKEN: ${{ github.token }}
