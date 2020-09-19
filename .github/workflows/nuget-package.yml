@@ -28,7 +28,7 @@ jobs:
         run: dotnet restore
         
       - name: Proccess build
-        run: dotnet build
+        run: dotnet build -c Release
         
       - name: Generate NuGet package
         run: dotnet pack -c Release --no-restore
