@@ -31,11 +31,14 @@ jobs:
       - name: Generate NuGet package
         run: dotnet pack -c Release --no-restore
 
+      - name: Add package source
+        run: dotnet nuget add source https://nuget.pkg.github.com/joasimonson/index.json -n github -u joasimonson -p GH_TOKEN ${{secrets.GITHUB_TOKEN}}
+        
       - name: Push generated package to GitHub registry
-#        run: dotnet nuget push "bin/Release/*.nupkg" --source "github"
-        run: |
-            for f in bin/Release/*.nupkg
-            do
-              curl -vX PUT -u "joasimonson:${{secrets.GITHUB_TOKEN}}" -F package=@$f https://nuget.pkg.github.com/joasimonson/
-            done
-        shell: bash
+        run: dotnet nuget push "bin/Release/*.nupkg" --source "github"
+#        run: |
+#            for f in bin/Release/*.nupkg
+#            do
+#              curl -vX PUT -u "joasimonson:${{secrets.GITHUB_TOKEN}}" -F package=@$f https://nuget.pkg.github.com/joasimonson/
+#            done
+#        shell: bash
