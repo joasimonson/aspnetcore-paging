@@ -10,6 +10,7 @@
     <FileVersion>1.0.0.0</FileVersion>
     <Description>Provides ability to return paging results from MVC APIs either by attribute or by result.</Description>
     <PackageProjectUrl>https://github.com/joasimonson/aspnetcore-paging</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/joasimonson/aspnetcore-paging</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
