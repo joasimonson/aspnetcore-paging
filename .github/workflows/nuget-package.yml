@@ -32,7 +32,7 @@ jobs:
         run: |
            for f in bin/Release/*.nupkg
            do
-             curl -vX PUT -u "vslee:${{ github.token }}" -F package=@$f https://nuget.pkg.github.com/${{github.repository_owner}}/index.json
+             curl -vX PUT -u "vslee:${{ github.token }}" -F package=@$f https://nuget.pkg.github.com/${{github.repository_owner}}
            done
         shell: bash
         
