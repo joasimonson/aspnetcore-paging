@@ -18,7 +18,7 @@ env:
   NUGET_FEED: https://api.nuget.org/v3/index.json
   NUGET_KEY: ${{ secrets.NUGET_KEY }}
   # Project
-  PROJECT_FILE: Microsoft.AspNetCore.Mvc.Paging.csproj
+  PROJECT_FILE: JustPaging.AspNetCore.csproj
 jobs:
   build:
     runs-on: ubuntu-18.04
