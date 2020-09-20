@@ -9,6 +9,16 @@ on:
     branches:
       - master
 
+env:
+  # GitHub Packages Feed settings
+  GITHUB_FEED: https://nuget.pkg.github.com/${{github.repository_owner}}
+  GITHUB_USER: joasimonson
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # Official NuGet Feed settings
+  NUGET_FEED: https://api.nuget.org/v3/index.json
+  NUGET_KEY: ${{ secrets.NUGET_KEY }}
+  # Project
+  PROJECT_FILE: Microsoft.AspNetCore.Mvc.Paging.csproj
 jobs:
   build:
     runs-on: ubuntu-18.04
@@ -23,15 +33,15 @@ jobs:
           #source-url: https://nuget.pkg.github.com/${{github.repository_owner}}/index.json
         #env:
           #NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      - run: dotnet build Microsoft.AspNetCore.Mvc.Paging.csproj --configuration Release
+      - run: dotnet build $PROJECT_FILE --configuration Release
       - name: Create the package
-        run: dotnet pack --configuration Release Microsoft.AspNetCore.Mvc.Paging.csproj
+        run: dotnet pack --configuration Release $PROJECT_FILE
       - name: Publish the package to NuGet Gallery
-        run: dotnet nuget push "bin/Release/*.nupkg" --api-key oy2j5ytnqpikpsartbaqssoxg4vqif4ehpe4boykidqvl4 --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push "bin/Release/*.nupkg" --api-key $NUGET_KEY --source $NUGET_FEED --skip-duplicate
       - name: Publish the package to GPR
         run: |
            for f in bin/Release/*.nupkg
            do
-             curl -vX PUT -u "vslee:${{ github.token }}" -F package=@$f https://nuget.pkg.github.com/${{github.repository_owner}}
+             curl -vX PUT -u "$GITHUB_USER:$GITHUB_TOKEN" -F package=@$f $GHP_FEED --skip-duplicate
            done
         shell: bash
