@@ -1,10 +1,5 @@
 using System;
 using System.Linq;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Paging;
-using System.Threading.Tasks;
 
 namespace Microsoft.AspNetCore.Mvc
 {
@@ -13,7 +8,6 @@ namespace Microsoft.AspNetCore.Mvc
     /// </summary>
     public static class QueryableExtensions
     {
-        #region === public methods ===
         public static PagedResult ToPagedResult(this IQueryable source, PagingInfo pageInfo, Http.HttpRequest request = null)
         {
             return ToPagedResult<object>(source, pageInfo, request) as PagedResult;
@@ -58,17 +52,12 @@ namespace Microsoft.AspNetCore.Mvc
                 Collection = list,
                 Pagination = new PagingInfo
                 {
-                    TotalResults = totalResults // total number of records returned, i.e. 4300
-                    ,
-                    TotalPages = totalPages // total number of pages (ceiling) = totalResults / MaxPageSize
-                    ,
-                    PageSize = pageInfo.PageSize // current page size, would be 3 x 1000 then 1 x 300
-                    ,
-                    Page = pageInfo.Page // current page
-                    //, MaxPageSizeAllowed = pi.MaxPageSizeAllowed
-                    ,
-                    Next = nextLink
-                    ,
+                    TotalResults = totalResults, // total number of records returned, i.e. 4300
+                    TotalPages = totalPages, // total number of pages (ceiling) = totalResults / MaxPageSize
+                    PageSize = pageInfo.PageSize, // current page size, would be 3 x 1000 then 1 x 300
+                    Page = pageInfo.Page, // current page
+                    //MaxPageSizeAllowed = pi.MaxPageSizeAllowed,
+                    Next = nextLink,
                     Previous = previousLink
                 }
             };
@@ -103,9 +92,7 @@ namespace Microsoft.AspNetCore.Mvc
                 .Skip((oageInfo.Page - 1) * oageInfo.PageSize)
                 .Take(oageInfo.PageSize);
         } 
-        #endregion
 
-        #region === private methods ===
         /// <summary>
         /// Returns a count from a generic iqueryable collection.
         /// </summary>
@@ -125,11 +112,9 @@ namespace Microsoft.AspNetCore.Mvc
         /// <param name="skip">Skip this amount.</param>
         /// <param name="take">Take this amount.</param>
         /// <returns></returns>
-        private static T[] GetGenericSkip<T>
-                (IQueryable<T> source, int skip, int take)
+        private static T[] GetGenericSkip<T>(IQueryable<T> source, int skip, int take)
         {
             return source.Skip(skip).Take(take).ToArray();
         } 
-        #endregion        
     }
 }

@@ -1,9 +1,5 @@
 using System;
 using System.Linq;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Paging;
 using System.Threading.Tasks;
 
 namespace Microsoft.AspNetCore.Mvc
@@ -14,7 +10,6 @@ namespace Microsoft.AspNetCore.Mvc
     /// <typeparam name="T">Collection type.</typeparam>
     public class PagingResult<T> : PagingResult
     {
-        #region === constructor ===
         /// <summary>
         /// Returns a new instance.
         /// </summary>
@@ -22,7 +17,6 @@ namespace Microsoft.AspNetCore.Mvc
         internal PagingResult(IQueryable<T> source) : base(source)
         {
         } 
-        #endregion
     }
 
     /// <summary>
@@ -30,12 +24,8 @@ namespace Microsoft.AspNetCore.Mvc
     /// </summary>
     public class PagingResult : IActionResult
     {
-        #region === member variables ===
-        /// <summary>Source.</summary>
-        private IQueryable _source;
-        #endregion
+        private readonly IQueryable _source;
 
-        #region === constructor ===
         /// <summary>
         /// Returns a new instance.
         /// </summary>
@@ -44,9 +34,7 @@ namespace Microsoft.AspNetCore.Mvc
         {
             _source = source;
         }
-        #endregion
 
-        #region === public methods ===
         /// <summary>
         /// Executes the request.
         /// </summary>
@@ -54,25 +42,21 @@ namespace Microsoft.AspNetCore.Mvc
         /// <returns></returns>
         public Task ExecuteResultAsync(ActionContext context)
         {
-            var queryableValue = _source as IQueryable;
-            if (queryableValue == null)
+            if (!(_source is IQueryable))
                 throw new ArgumentException("Must return IQueryable from controller.");
 
             var httpContext = context.HttpContext;
             var httpRequest = httpContext.Request;
             var httpResponse = httpContext.Response;
 
-            if (httpResponse.IsSuccessStatusCode())
+            if (!httpResponse.IsSuccessStatusCode())
             {
-                var pi = PagingInfo.FromRequest(httpRequest);
-                var or = new OkObjectResult(
-                        _source.ToPagedResult(pi, httpRequest)
-                    );
-                return or.ExecuteResultAsync(context);
-                //return Task.FromResult(or);
+                throw new ArgumentException("Response is not a success.");
             }
-            throw new ArgumentException("Response is not a success.");
+
+            var pi = PagingInfo.FromRequest(httpRequest);
+            var or = new OkObjectResult(_source.ToPagedResult(pi, httpRequest));
+            return or.ExecuteResultAsync(context);
         } 
-        #endregion
     }
 }

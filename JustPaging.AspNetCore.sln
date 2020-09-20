@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2035
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.AspNetCore.Mvc.Paging", "Microsoft.AspNetCore.Mvc.Paging.csproj", "{199A8D9E-87C5-4ABD-9145-F3A53A906E49}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JustPaging.AspNetCore", "JustPaging.AspNetCore.csproj", "{199A8D9E-87C5-4ABD-9145-F3A53A906E49}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
+using System;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 
-namespace Microsoft.AspNetCore.Mvc.Paging
+namespace Microsoft.AspNetCore.Mvc
 {
     /// <summary>
     /// Enable method to return paged results sets.
@@ -13,30 +11,18 @@ namespace Microsoft.AspNetCore.Mvc.Paging
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class EnablePagingAttribute : ActionFilterAttribute
     {
-        #region === member variables
-        private int? _maxPageSize = null; 
-        #endregion
+        private readonly int? _maxPageSize = null;
 
-        #region === constructor ===
-        /// <summary>
-        /// 
-        /// </summary>
         public EnablePagingAttribute()
         {
 
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="maxPageSize"></param>
         public EnablePagingAttribute(int maxPageSize)
         {
             _maxPageSize = maxPageSize;
         }
-        #endregion
 
-        #region === public methods ===
         /// <summary>
         /// Invoked as the method executes, and convert the output IQuerable to a paged result set.
         /// </summary>
@@ -52,8 +38,7 @@ namespace Microsoft.AspNetCore.Mvc.Paging
                 var pi = PagingInfo.FromRequest(httpRequest);
                 var or = (ObjectResult)context.Result;
 
-                var queryableValue = or.Value as IQueryable;
-                if (queryableValue == null)
+                if (!(or.Value is IQueryable queryableValue))
                     throw new ArgumentException("Must return IQueryable from controller.");
 
                 or.Value = queryableValue.ToPagedResult(pi, httpRequest);
@@ -62,7 +47,6 @@ namespace Microsoft.AspNetCore.Mvc.Paging
             {
                 base.OnActionExecuted(context);
             }
-        } 
-        #endregion
+        }
     }
 }

@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Microsoft.AspNetCore.Mvc.Paging
+﻿namespace Microsoft.AspNetCore.Mvc
 {
     // TODO: recode to PagingContext
 
@@ -13,12 +8,10 @@ namespace Microsoft.AspNetCore.Mvc.Paging
     /// <typeparam name="T"></typeparam>
     public class PagedResult<T> where T : class
     {
-        #region === properties ===
         /// <summary>Gets or sets the collection.</summary>
         public T[] Collection { get; set; }
         /// <summary>Gets or sets the pagination information.</summary>
         public PagingInfo Pagination { get; set; } 
-        #endregion
     }
 
     /// <summary>

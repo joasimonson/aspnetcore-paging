@@ -1,17 +1,13 @@
-using System;
-using System.Linq;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
-using System.Text;
+using System;
 
-namespace Microsoft.AspNetCore.Mvc.Paging
+namespace Microsoft.AspNetCore.Mvc
 {
     /// <summary>
     /// Provides properties for a paged result set, including the page size and results.
     /// </summary>
     public sealed class PagingInfo
     {
-        #region === constructor ===
         /// <summary>
         /// Returns a new instance of the paging info object.
         /// </summary>
@@ -24,9 +20,7 @@ namespace Microsoft.AspNetCore.Mvc.Paging
             this.Next = null;
             this.Previous = null;
         }
-        #endregion
 
-        #region === properties ===
         /// <summary>Gets or sets the results per page.</summary>
         public int PageSize { get; set; }
         /// <summary>Gets or sets the total number of results</summary>
@@ -40,9 +34,7 @@ namespace Microsoft.AspNetCore.Mvc.Paging
         public string Previous { get; internal set; }
         /// <summary>Gets a link to the next page.</summary>
         public string Next { get; internal set; }
-        #endregion
 
-        #region === internal methods ===
         /// <summary>
         /// Returns a paginginfo class from an HttpRequest.
         /// </summary>
@@ -60,7 +52,6 @@ namespace Microsoft.AspNetCore.Mvc.Paging
                 throw new ArgumentOutOfRangeException("PageSize must be 1000 or below");
 
             return retValue;
-        } 
-        #endregion
+        }
     }
 }

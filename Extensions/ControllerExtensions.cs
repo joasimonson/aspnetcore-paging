@@ -1,10 +1,4 @@
-using System;
 using System.Linq;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Paging;
-using System.Threading.Tasks;
 
 namespace Microsoft.AspNetCore.Mvc
 {
@@ -36,5 +30,4 @@ namespace Microsoft.AspNetCore.Mvc
             return new PagingResult<T>(source);
         }
     }
-
 }
