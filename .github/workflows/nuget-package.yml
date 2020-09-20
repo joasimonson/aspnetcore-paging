@@ -19,50 +19,19 @@ jobs:
         
       - uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: '3.1.101' # SDK Version to use.
-         # source-url: https://nuget.pkg.github.com/${{github.repository_owner}}/index.json
+          dotnet-version: '3.1.301'
+          #source-url: https://nuget.pkg.github.com/${{github.repository_owner}}/index.json
         #env:
           #NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - run: dotnet build Microsoft.AspNetCore.Mvc.Paging.csproj --configuration Release
       - name: Create the package
         run: dotnet pack --configuration Release Microsoft.AspNetCore.Mvc.Paging.csproj
+      - name: Publish the package to NuGet Gallery
+        run: dotnet nuget push "bin/Release/*.nupkg" --api-key ${{NUGET_ORG_KEY}} --source https://api.nuget.org/v3/index.json
       - name: Publish the package to GPR
-        #run: dotnet nuget push "bin/Release/*.nupkg" --source "github"
-        #run: dotnet nuget push bin/Release/*.nupkg
         run: |
            for f in bin/Release/*.nupkg
            do
              curl -vX PUT -u "vslee:${{ github.token }}" -F package=@$f https://nuget.pkg.github.com/${{github.repository_owner}}
            done
         shell: bash
-        
-        
-#      - name: Setup .NET Core
-#        uses: actions/setup-dotnet@v1
-#        with:
-#          dotnet-version: 3.1.301
-#          source-url: https://api.nuget.org/v3/index.json
-#        env:
-#          NUGET_AUTH_TOKEN: '%NUGET_AUTH_TOKEN%'
-
-#      - name: Install dependencies
-#        run: dotnet restore
-       
-#      - name: Proccess build
-#        run: dotnet build -c Release --no-restore
-
-#      - name: Setup nuget source
-#        uses: actions/setup-dotnet@v1
-#        with:
-#          dotnet-version: 3.1.301
-#          source-url: https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json
-#        env:
-#          NUGET_AUTH_TOKEN: '%NUGET_AUTH_TOKEN%'
-        
-#      - name: Generate NuGet package
-#        run: dotnet pack -c Release --no-restore
-        
-#      - name: Push generated package to GitHub registry
-#        run: dotnet nuget push "bin/Release/*.nupkg" --no-symbols --skip-duplicate
-#        env:
-#          NUGET_AUTH_TOKEN: ${{ github.token }}
